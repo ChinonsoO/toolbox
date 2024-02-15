@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/growlf/toolbox:latest
+    environment:
+      - TESTVAR=${TESTVAR:-app}
+    stdin_open: true
+    tty: true
+    command: ["/bin/zsh"]
+    volumes:
+      # Ensure to replace `C:/path/to/your/home` with the actual path to your home directory on Windows
+      - //var/run/docker.sock:/var/run/docker.sock
+      - chinonso_volume:/tmp
+    network_mode: "host"
+
+  app1:
+    image: ghcr.io/growlf/toolbox:latest
+    environment:
+      - TESTVAR=${TESTVAR:-app2}
+    stdin_open: true
+    tty: true
+    command: ["/bin/zsh"]
+    volumes:
+      - C:/:/host  # This line mounts the C drive to /host in the container; adjust as needed for your setup
+      - //var/run/docker.sock:/var/run/docker.sock
+    network_mode: "host"
+
+  app2:
+    image: ghcr.io/growlf/toolbox:latest
+    environment:
+      - TESTVAR=${TESTVAR:-app2}
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash"]
